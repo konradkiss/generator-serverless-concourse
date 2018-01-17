@@ -1,0 +1,21 @@
+{
+  "name": "generator-serverless-concourse",
+  "version": "0.0.1",
+  "description": "Yeoman Generator for serverless-concourse functions and tests.",
+  "main": "app/fn/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/konradkiss/generator-serverless-concourse.git"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "author": "Konrad Kiss (http://konradkiss.com)",
+  "engines": {
+    "node": ">=6.10.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "yeoman-generator": "~0.10.2"
+  }
+}
