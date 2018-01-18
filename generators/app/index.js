@@ -9,70 +9,131 @@ module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts)
 
+    const supportedVerbs = ['GET', 'POST', 'PUT', 'DELETE']
+
     // this.sourceRoot(this.destinationRoot() + '/generators/fn/templates')
 
     this.argument('verb', { type: String, required: true, desc: 'http verb' })
     this.argument('endpoint', { type: String, required: true, desc: 'endpoint path' })
     this.option('version', { type: Number, required: false, default: 1, desc: 'api version (defaults to 1)' })
 
-    this.version = `v${this.options.version}`
+    verb = this.options.verb.toUpperCase()
 
-    this.endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
-    this.endpointHandlerArr = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
+    endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
+    fnName = endpointCase.split('/')[0]
+    this.namePlural = isPlural ? fnName : pluralize.plural(fnName)
+    handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
 
-    this.fnname = this.endpointCase.split('/')[0]
-    this.isPlural = pluralize.isPlural(this.fnname)
-    this.namePlural = this.isPlural ? this.fnname : pluralize.plural(this.fnname)
-    this.nameSingular = !this.isPlural ? this.fnname : pluralize.singular(this.fnname)
-    this.verb = this.options.verb.toUpperCase()
-    this.needsId = this.verb === 'POST' ? false : !this.isPlural
-    this.handler = this.endpointHandlerArr[1] || this.options.verb.toLowerCase() + this.fnname.charAt(0).toUpperCase() + this.fnname.slice(1)
+    version = `v${this.options.version}`
+
+    this.tasks = []
+    if (verb === 'CRUD') {
+      for (let v in supportedVerbs) {
+        this.tasks.push(this.createTask(v, fnName, version))
+      }
+    } else if (supportedVerbs.indexOf(verb) > -1) {
+      this.tasks.push(this.createTask(verb, fnName, version))
+    }
   }
 
   prompting() {
 
-    const prompts = [
-      { message: 'API version?', name: 'version', type: 'input', default: this.version },
-      { message: 'Function name', name: 'name', type: 'input', default: this.namePlural },
-      { message: 'HTTP verb', name: 'verb', type: 'input', default: this.verb },
-      { message: 'HTTP path', name: 'path', type: 'input', default: this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (this.isPlural ? '' : '/{id}') },
-      { message: 'Handler name', name: 'handler', type: 'input', default: this.handler },
-      { message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false },
-    ]
+    verb = this.options.verb.toUpperCase()
+    endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
+    fnName = endpointCase.split('/')[0]
+    handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
+    version = `v${this.options.version}`
+
+    this.defaultPath = this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (this.needsId ? '/{id}' : '')
+
+    const prompts = [];
+    prompts.push({ message: 'API version?', name: 'version', type: 'input', default: version })
+    prompts.push({ message: 'Function name', name: 'name', type: 'input', default: this.namePlural })
+    if (this.crud) {
+      prompts.push({ message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false })
+      prompts.push({ message: 'Generate CRUD?', name: 'crud', type: 'confirm', default: true })
+    } else {
+      prompts.push({ message: 'HTTP verb', name: 'verb', type: 'input', default: verb })
+      prompts.push({ message: 'HTTP path', name: 'path', type: 'input', default: this.defaultPath })
+      prompts.push({ message: 'Handler name', name: 'handler', type: 'input', default: handler })
+      prompts.push({ message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false })
+    }
 
     return this.prompt(prompts).then((answers) => {
+
+      this.tasks = []
+      if (verb === 'CRUD') {
+        if (!answers.crud) {
+          return
+        }
+        for (let v in supportedVerbs) {
+          this.tasks.push(this.createTask(v, answers.name, answers.version))
+        }
+      } else if (supportedVerbs.indexOf(task.verb) > -1) {
+        this.tasks.push(this.createTask(task.verb, answers.name, answers.version))
+      }
+
       fullname().then(username => {
+
         const today = new Date();
         const day = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
-        this.handlerFile = answers.handler //.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
+        while (this.tasks.length) {
 
-        this.fs.copyTpl(
-          this.templatePath('function.ts.txt'),
-          this.destinationPath(`functions/${answers.version}/${answers.name}/${this.handlerFile}.ts`),
-          { name: answers.name, verb: answers.verb, lverb: answers.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: this.handlerFile, cors: answers.cors, username, day, version: answers.version }
-        )
+          const task = tasks.shift()
 
-        this.fs.copyTpl(
-          this.templatePath('test.ts.txt'),
-          this.destinationPath(`__tests__/${answers.version}/${answers.name}/${this.handlerFile}.spec.ts`),
-          { name: answers.name, verb: answers.verb, lverb: answers.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: this.handlerFile, cors: answers.cors, username, day, version: answers.version }
-        )
+          answers.path = answers.path || task.path
 
-        const routesText = this.fs.read('routes.yml')
-        const yamlEdit = YamlEdit(routesText)
-        const route = {}
-        route[answers.name] = {
-          handler: `functions/${answers.version}/${answers.name}/${this.handlerFile}.${answers.handler}`,
-          events: [
-            { http: { path: answers.path, method: answers.verb, cors: answers.cors } },
-          ]
+          this.fs.copyTpl(
+            this.templatePath('function.ts.txt'),
+            this.destinationPath(`functions/${task.version}/${task.name}/${task.handler}.ts`),
+            { name: task.name, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: task.handler, cors: answers.cors, username, day, version: task.version }
+          )
+
+          this.fs.copyTpl(
+            this.templatePath('test.ts.txt'),
+            this.destinationPath(`__tests__/${task.version}/${task.name}/${task.handler}.spec.ts`),
+            { name: task.name, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: task.handler, cors: answers.cors, username, day, version: task.version }
+          )
+
+          const routesText = this.fs.read('routes.yml')
+          const yamlEdit = YamlEdit(routesText)
+          const route = {}
+          route[task.name] = {
+            handler: `functions/${task.version}/${task.name}/${task.handler}.${answers.handler}`,
+            events: [
+              { http: { path: answers.path, method: task.verb, cors: answers.cors } },
+            ]
+          }
+          if (this.needsId) {
+            route[task.name].events[0].http.request = { parameters: { paths: { id: true } } }
+          }
+          yamlEdit.insertChild(task.version, route)
+
         }
-        if (this.needsId) {
-          route[answers.name].events[0].http.request = { parameters: { paths: { id: true } } }
-        }
-        yamlEdit.insertChild(answers.version, route)
       })
     })
+  }
+}
+
+const createTask = (verb, fnName, version, handler) => {
+
+  isPlural = pluralize.isPlural(fnName)
+  namePlural = isPlural ? fnName : pluralize.plural(fnName)
+  nameSingular = !isPlural ? fnName : pluralize.singular(fnName)
+  needsId = verb === 'POST' ? false : !isPlural
+  handlerName = hand || verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
+  endpointPath = namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (needsId ? '/{id}' : '')
+
+  return {
+    name: fnName,
+    version,
+    verb: verb.toUpperCase(),
+    lverb: verb.toLowerCase(),
+    isPlural,
+    namePlural,
+    nameSingular,
+    needsId,
+    handler: handlerName,
   }
 }
