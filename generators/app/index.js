@@ -76,14 +76,14 @@ module.exports = class extends Generator {
 
           this.fs.copyTpl(
             this.templatePath('function.ts.txt'),
-            this.destinationPath(`functions/${task.version}/${task.name}/${answer.handler}.ts`),
-            { name: task.name, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: answer.handler, cors: answers.cors, username, day, version: task.version }
+            this.destinationPath(`functions/${task.version}/${task.name}/${answers.handler}.ts`),
+            { name: task.name, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: answers.handler, cors: answers.cors, username, day, version: task.version }
           )
 
           this.fs.copyTpl(
             this.templatePath('test.ts.txt'),
-            this.destinationPath(`__tests__/${task.version}/${task.name}/${answer.handler}.spec.ts`),
-            { name: task.name, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: answer.handler, cors: answers.cors, username, day, version: task.version }
+            this.destinationPath(`__tests__/${task.version}/${task.name}/${answers.handler}.spec.ts`),
+            { name: task.name, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: answers.handler, cors: answers.cors, username, day, version: task.version }
           )
 
           const routesText = this.fs.read('routes.yml')
