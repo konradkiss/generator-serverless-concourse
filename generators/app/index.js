@@ -68,7 +68,7 @@ module.exports = class extends Generator {
 
         while (this.tasks.length) {
 
-          const task = tasks.shift()
+          const task = this.tasks.shift()
 
           answers.path = answers.path || task.path
 
