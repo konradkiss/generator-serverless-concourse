@@ -20,7 +20,7 @@ module.exports = class extends Generator {
     this.endpointHandlerArr = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
 
     this.fnname = this.endpointCase.split('/')[0]
-    this.verb = this.options.verb.toUpperCase()
+    this.verb = this.options.verb.toLowerCase()
     this.handler = this.endpointHandlerArr[1] || this.options.verb + this.fnname.charAt(0).toUpperCase() + this.fnname.slice(1)
   }
 
@@ -28,7 +28,7 @@ module.exports = class extends Generator {
     return this.prompt([
 
       { message: 'Function name', name: 'name', type: 'input', default: this.fnname },
-      { message: 'HTTP verb', name: 'verb', type: 'input', default: this.verb },
+      { message: 'HTTP verb', name: 'verb', type: 'input', default: this.verb.toUpperCase() },
       { message: 'HTTP path', name: 'path', type: 'input', default: this.endpointCase.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() },
       { message: 'Handler name', name: 'handler', type: 'input', default: this.handler },
       { message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false },
@@ -41,22 +41,22 @@ module.exports = class extends Generator {
         this.fs.copyTpl(
           this.templatePath('function.ts.txt'),
           this.destinationPath(`functions/${this.version}/${answers.name}/${answers.verb}.ts`),
-          { name: answers.name, verb: answers.verb, path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version: this.version }
+          { name: answers.name, verb: answers.verb.toUpperCase(), path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version: this.version }
         )
 
         this.fs.copyTpl(
           this.templatePath('test.ts.txt'),
           this.destinationPath(`__tests__/functions/${this.version}/${answers.name}/${answers.verb}.spec.ts`),
-          { name: answers.name, verb: answers.verb, path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version: this.version }
+          { name: answers.name, verb: answers.verb.toUpperCase(), path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version: this.version }
         )
 
         const routesText = this.fs.read('routes.yml', { defaults: '' })
         const yamlEdit = YamlEdit(routesText)
         const route = {}
         route[answers.name] = {
-          handler: `functions/${this.version}/${answers.name}/${answers.verb.toLowerCase()}.${answers.handler}`,
+          handler: `functions/${this.version}/${answers.name}/${answers.verb}.${answers.handler}`,
           events: [
-            { http: { path: answers.path, method: answers.verb.toLowerCase(), cors: answers.cors } },
+            { http: { path: answers.path, method: answers.verb, cors: answers.cors } },
           ]
         }
         yamlEdit.insertChild(this.version, route)
