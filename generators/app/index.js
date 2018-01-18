@@ -22,6 +22,7 @@ module.exports = class extends Generator {
     this.isPlural = pluralize.isPlural(fnName)
     this.needsId = this.options.verb.toUpperCase() === 'POST' ? false : !this.isPlural
     this.namePlural = this.isPlural ? fnName : pluralize.plural(fnName)
+    this.nameSingular = !this.isPlural ? fnName : pluralize.singular(fnName)
   }
 
   prompting() {
@@ -32,7 +33,7 @@ module.exports = class extends Generator {
     const handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
     let hand = fnName
     if (['PUT', 'POST', 'DELETE'].indexOf(verb.toUpperCase()) > -1) {
-      hand = nameSingular
+      hand = this.nameSingular
     }
     const handlerName = verb.toLowerCase() + hand.charAt(0).toUpperCase() + hand.slice(1)
     const version = `v${this.options.version}`
