@@ -27,7 +27,7 @@ module.exports = class extends Generator {
   prompting() {
     return this.prompt([
 
-      { message: 'API version?', name: 'cors', type: 'input', default: this.version },
+      { message: 'API version?', name: 'version', type: 'input', default: this.version },
       { message: 'Function name', name: 'name', type: 'input', default: this.fnname },
       { message: 'HTTP verb', name: 'verb', type: 'input', default: this.verb },
       { message: 'HTTP path', name: 'path', type: 'input', default: this.endpointCase.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() },
