@@ -17,24 +17,10 @@ module.exports = class extends Generator {
     this.argument('endpoint', { type: String, required: true, desc: 'endpoint path' })
     this.option('version', { type: Number, required: false, default: 1, desc: 'api version (defaults to 1)' })
 
-    const verb = this.options.verb.toUpperCase()
-
     const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
     const fnName = endpointCase.split('/')[0]
     const isPlural = pluralize.isPlural(fnName)
     this.namePlural = isPlural ? fnName : pluralize.plural(fnName)
-    const handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
-
-    const version = `v${this.options.version}`
-
-    this.tasks = []
-    if (verb === 'CRUD') {
-      for (let v in supportedVerbs) {
-        this.tasks.push(this.createTask(v, fnName, version))
-      }
-    } else if (supportedVerbs.indexOf(verb) > -1) {
-      this.tasks.push(this.createTask(verb, fnName, version))
-    }
   }
 
   prompting() {
@@ -68,10 +54,10 @@ module.exports = class extends Generator {
           return
         }
         for (let v in supportedVerbs) {
-          this.tasks.push(this.createTask(v, answers.name, answers.version))
+          this.tasks.push(createTask(v, answers.name, answers.version))
         }
       } else if (supportedVerbs.indexOf(task.verb) > -1) {
-        this.tasks.push(this.createTask(task.verb, answers.name, answers.version))
+        this.tasks.push(createTask(task.verb, answers.name, answers.version))
       }
 
       fullname().then(username => {
