@@ -122,5 +122,6 @@ const createTask = (verb, fnName, version, handler) => {
     nameSingular,
     needsId,
     handler: handlerName,
+    path: endpointPath
   }
 }
