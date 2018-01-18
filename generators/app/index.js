@@ -24,8 +24,8 @@ module.exports = class extends Generator {
     this.isPlural = pluralize.isPlural(this.fnname)
     this.namePlural = this.isPlural ? this.fnname : pluralize.plural(this.fnname)
     this.nameSingular = !this.isPlural ? this.fnname : pluralize.singular(this.fnname)
-
     this.verb = this.options.verb.toUpperCase()
+    this.needsId = this.verb === 'POST' ? false : !this.isPlural
     this.handler = this.endpointHandlerArr[1] || this.options.verb.toLowerCase() + this.fnname.charAt(0).toUpperCase() + this.fnname.slice(1)
   }
 
@@ -68,7 +68,7 @@ module.exports = class extends Generator {
             { http: { path: answers.path, method: answers.verb, cors: answers.cors } },
           ]
         }
-        if (!this.isPlural) {
+        if (this.needsId) {
           route[answers.name].events[0].http.request = { parameters: { paths: { id: true } } }
         }
         yamlEdit.insertChild(answers.version, route)
