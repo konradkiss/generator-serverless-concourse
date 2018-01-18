@@ -12,22 +12,27 @@ module.exports = class extends Generator {
 
     this.argument('verb', { type: String, required: true, desc: 'http verb' })
     this.argument('endpoint', { type: String, required: true, desc: 'endpoint path' })
+    this.option('version', { type: Number, required: false, default: 1, desc: 'api version (defaults to 1)' })
+
+    this.version = `v${this.options.version}`
 
     this.endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
     this.endpointHandlerArr = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
 
     this.fnname = this.endpointCase.split('/')[0]
     this.verb = this.options.verb.toUpperCase()
-    this.handler = this.endpointHandlerArr[1] || this.options.verb
+    this.handler = this.endpointHandlerArr[1] || this.options.verb + this.fnname.charAt(0).toUpperCase() + this.fnname.slice(1)
   }
 
   prompting() {
     return this.prompt([
+
       { message: 'Function name', name: 'name', type: 'input', default: this.fnname },
       { message: 'HTTP verb', name: 'verb', type: 'input', default: this.verb },
       { message: 'HTTP path', name: 'path', type: 'input', default: this.endpointCase.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() },
       { message: 'Handler name', name: 'handler', type: 'input', default: this.handler },
       { message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false },
+
     ]).then((answers) => {
       fullname().then(username => {
         const today = new Date();
@@ -35,26 +40,26 @@ module.exports = class extends Generator {
 
         this.fs.copyTpl(
           this.templatePath('function.ts.txt'),
-          this.destinationPath(`functions/${answers.name}/${answers.handler}.ts`),
-          { name: answers.name, verb: answers.verb, path: answers.path, handler: answers.handler, cors: answers.cors, username, day }
+          this.destinationPath(`functions/${version}/${answers.name}/${answers.verb}.ts`),
+          { name: answers.name, verb: answers.verb, path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version }
         )
 
         this.fs.copyTpl(
           this.templatePath('test.ts.txt'),
-          this.destinationPath(`__tests__/${answers.name}.${answers.handler}.spec.ts`),
-          { name: answers.name, verb: answers.verb, path: answers.path, handler: answers.handler, cors: answers.cors, username, day }
+          this.destinationPath(`__tests__/functions/${version}/${answers.name}/${answers.verb}.spec.ts`),
+          { name: answers.name, verb: answers.verb, path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version }
         )
 
         const routesText = this.fs.read('routes.yml', { defaults: '' })
         const yamlEdit = YamlEdit(routesText)
         const route = {}
         route[answers.name] = {
-          handler: `functions/${answers.name}/${answers.handler}.${answers.handler}`,
+          handler: `functions/${version}/${answers.name}/${answers.verb.toLowerCase()}.${answers.handler}`,
           events: [
             { http: { path: answers.path, method: answers.verb.toLowerCase(), cors: answers.cors } },
           ]
         }
-        yamlEdit.insertChild('', route)
+        yamlEdit.insertChild(this.version, route)
       })
     })
   }
