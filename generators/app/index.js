@@ -26,32 +26,34 @@ module.exports = class extends Generator {
 
     this.verb = this.options.verb.toUpperCase()
     this.handler = this.endpointHandlerArr[1] || this.options.verb.toLowerCase() + this.fnname.charAt(0).toUpperCase() + this.fnname.slice(1)
+    this.handlerFile = this.handler.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
   }
 
   prompting() {
-    return this.prompt([
 
+    const prompts = [
       { message: 'API version?', name: 'version', type: 'input', default: this.version },
-      { message: 'Function name', name: 'name', type: 'input', default: this.fnname },
+      { message: 'Function name', name: 'name', type: 'input', default: this.namePlural },
       { message: 'HTTP verb', name: 'verb', type: 'input', default: this.verb },
-      { message: 'HTTP path', name: 'path', type: 'input', default: this.endpointCase.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() },
+      { message: 'HTTP path', name: 'path', type: 'input', default: this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() },
       { message: 'Handler name', name: 'handler', type: 'input', default: this.handler },
       { message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false },
+    ]
 
-    ]).then((answers) => {
+    return this.prompt(prompts).then((answers) => {
       fullname().then(username => {
         const today = new Date();
         const day = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
         this.fs.copyTpl(
           this.templatePath('function.ts.txt'),
-          this.destinationPath(`functions/${answers.version}/${answers.name}/${answers.verb.toLowerCase()}.ts`),
+          this.destinationPath(`functions/${answers.version}/${answers.name}/${answers.handlerFile}.ts`),
           { name: answers.name, verb: answers.verb, lverb: answers.verb.toLowerCase(), path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version: answers.version }
         )
 
         this.fs.copyTpl(
           this.templatePath('test.ts.txt'),
-          this.destinationPath(`__tests__/functions/${answers.version}/${answers.name}/${answers.verb.toLowerCase()}.spec.ts`),
+          this.destinationPath(`__tests__/functions/${answers.version}/${answers.name}/${answers.handlerFile}.spec.ts`),
           { name: answers.name, verb: answers.verb, lverb: answers.verb.toLowerCase(), path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version: answers.version }
         )
 
