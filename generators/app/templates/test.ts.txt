@@ -5,7 +5,7 @@
  * @author <%= username %>
  */
 
-import * as mod from '../functions/<%= path %>/<%= handler %>'
+import * as mod from '../functions/<%= version %>/<%= path %>/<%= handler %>'
 import * as w from 'lambda-wrapper'
 
 const lambda = w.wrap(mod, { handler: '<%= handler %>' })
