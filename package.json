@@ -1,0 +1,23 @@
+{
+  "name": "generator-serverless-concourse",
+  "version": "0.1.0",
+  "description": "Yeoman Generator for serverless-concourse that creates new endpoints with tests and route registration.",
+  "files": [
+    "generators"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/konradkiss/generator-serverless-concourse.git"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "author": "Konrad Kiss (http://konradkiss.com)",
+  "engines": {
+    "node": ">=6.10.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "yeoman-generator": "^1.0.0"
+  }
+}
