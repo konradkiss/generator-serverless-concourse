@@ -30,7 +30,7 @@ module.exports = class extends Generator {
     const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
     const fnName = endpointCase.split('/')[0]
     const handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
-    const handlerName = handler || verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
+    const handlerName = verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
     const version = `v${this.options.version}`
 
     this.defaultPath = this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (this.needsId ? '/{id}' : '')
@@ -72,6 +72,7 @@ module.exports = class extends Generator {
           const task = this.tasks.shift()
 
           answers.path = answers.path || task.path
+          answers.handler = answers.handler || task.verb.toLowerCase() + task.name.charAt(0).toUpperCase() + task.name.slice(1)
 
           this.fs.copyTpl(
             this.templatePath('function.ts.txt'),
@@ -110,7 +111,7 @@ const createTask = (verb, fnName, version, handler) => {
   const namePlural = this.isPlural ? fnName : pluralize.plural(fnName)
   const nameSingular = !this.isPlural ? fnName : pluralize.singular(fnName)
   const needsId = verb === 'POST' ? false : !this.isPlural
-  const handlerName = handler || verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
+  const handlerName = verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
   const endpointPath = namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (needsId ? '/{id}' : '')
 
   return {
