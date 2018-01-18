@@ -17,7 +17,7 @@ module.exports = class extends Generator {
 
     this.fnname = this.endpointCase.split('/')[0]
     this.verb = this.options.verb
-    this.handler = endpointHandlerArr[1] || this.options.verb
+    this.handler = this.endpointHandlerArr[1] || this.options.verb
   }
 
   prompting() {
