@@ -20,6 +20,7 @@ module.exports = class extends Generator {
     const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
     const fnName = endpointCase.split('/')[0]
     const isPlural = pluralize.isPlural(fnName)
+    this.needsId = this.options.verb.toUpperCase() === 'POST' ? false : !isPlural
     this.namePlural = isPlural ? fnName : pluralize.plural(fnName)
   }
 
