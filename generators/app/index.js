@@ -9,7 +9,7 @@ module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts)
 
-    const supportedVerbs = ['GET', 'POST', 'PUT', 'DELETE']
+    this.supportedVerbs = ['GET', 'POST', 'PUT', 'DELETE']
 
     // this.sourceRoot(this.destinationRoot() + '/generators/fn/templates')
 
@@ -54,10 +54,10 @@ module.exports = class extends Generator {
         if (!answers.crud) {
           return
         }
-        for (let v in supportedVerbs) {
+        for (let v in this.supportedVerbs) {
           this.tasks.push(createTask(v, answers.name, answers.version))
         }
-      } else if (supportedVerbs.indexOf(task.verb) > -1) {
+      } else if (this.supportedVerbs.indexOf(task.verb) > -1) {
         this.tasks.push(createTask(task.verb, answers.name, answers.version))
       }
 
