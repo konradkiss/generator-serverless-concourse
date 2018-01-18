@@ -110,7 +110,7 @@ const createTask = (verb, fnName, version, handler) => {
   const namePlural = isPlural ? fnName : pluralize.plural(fnName)
   const nameSingular = !isPlural ? fnName : pluralize.singular(fnName)
   const needsId = verb === 'POST' ? false : !isPlural
-  const handlerName = hand || verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
+  const handlerName = handler || verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
   const endpointPath = namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (needsId ? '/{id}' : '')
 
   return {
