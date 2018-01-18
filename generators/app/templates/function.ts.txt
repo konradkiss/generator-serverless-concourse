@@ -1,7 +1,7 @@
 /**
  * Handler for the <%= verb %> /<%= path %> endpoint.
  *
- * Generated on <%= date => by yo generator-serverless-concourse.
+ * Generated on <%= date %> by yo generator-serverless-concourse.
  * @author <%= username %>
  */
 
