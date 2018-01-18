@@ -19,9 +19,9 @@ module.exports = class extends Generator {
 
     const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
     const fnName = endpointCase.split('/')[0]
-    const isPlural = pluralize.isPlural(fnName)
-    this.needsId = this.options.verb.toUpperCase() === 'POST' ? false : !isPlural
-    this.namePlural = isPlural ? fnName : pluralize.plural(fnName)
+    this.isPlural = pluralize.isPlural(fnName)
+    this.needsId = this.options.verb.toUpperCase() === 'POST' ? false : !this.isPlural
+    this.namePlural = this.isPlural ? fnName : pluralize.plural(fnName)
   }
 
   prompting() {
@@ -106,10 +106,9 @@ module.exports = class extends Generator {
 
 const createTask = (verb, fnName, version, handler) => {
 
-  const isPlural = pluralize.isPlural(fnName)
-  const namePlural = isPlural ? fnName : pluralize.plural(fnName)
-  const nameSingular = !isPlural ? fnName : pluralize.singular(fnName)
-  const needsId = verb === 'POST' ? false : !isPlural
+  const namePlural = this.isPlural ? fnName : pluralize.plural(fnName)
+  const nameSingular = !this.isPlural ? fnName : pluralize.singular(fnName)
+  const needsId = verb === 'POST' ? false : !this.isPlural
   const handlerName = handler || verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
   const endpointPath = namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (needsId ? '/{id}' : '')
 
@@ -118,7 +117,6 @@ const createTask = (verb, fnName, version, handler) => {
     version,
     verb: verb.toUpperCase(),
     lverb: verb.toLowerCase(),
-    isPlural,
     namePlural,
     nameSingular,
     needsId,
