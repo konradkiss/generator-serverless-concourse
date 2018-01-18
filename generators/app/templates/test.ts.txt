@@ -9,7 +9,7 @@ const mod = require('../../../functions/<%= version %>/<%= name %>/<%= handlerFi
 const lambda = require('lambda-wrapper').wrap(mod, { handler: '<%= handler %>' })
 let response
 
-describe('/<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %>'', () => {
+describe('/<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %>', () => {
 
   beforeAll( async (done) => {
     response = await lambda.run({test: 'cbsuccess'})
