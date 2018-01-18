@@ -1,8 +1,11 @@
+/**
+ * Tests for the <%= verb %> /<%= path %> endpoint.
+ *
+ * Generated on <%= date => by yo generator-serverless-concourse.
+ * @author <%= username %>
+ */
 
-// <%= name %>.<%= handler %>
-// <%= path %>
-
-import * as mod from './functions/<%= path %>'
+import * as mod from '../functions/<%= path %>/<%= handler %>'
 import * as w from 'lambda-wrapper'
 
 const lambda = w.wrap(mod, { handler: '<%= handler %>' })

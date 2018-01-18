@@ -1,3 +1,9 @@
+/**
+ * Handler for the <%= verb %> /<%= path %> endpoint.
+ *
+ * Generated on <%= date => by yo generator-serverless-concourse.
+ * @author <%= username %>
+ */
 
 export const <%= name %> = (event, context, callback) => {
 
