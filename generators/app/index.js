@@ -22,8 +22,8 @@ module.exports = class extends Generator {
 
     this.fnname = this.endpointCase.split('/')[0]
     this.isPlural = pluralize.isPlural(this.fnname)
-    this.namePlural = isPlural ? this.fnname : pluralize.plural(this.fnname)
-    this.nameSingular = !isPlural ? this.fnname : pluralize.singular(this.fnname)
+    this.namePlural = this.isPlural ? this.fnname : pluralize.plural(this.fnname)
+    this.nameSingular = !this.isPlural ? this.fnname : pluralize.singular(this.fnname)
 
     this.verb = this.options.verb.toUpperCase()
     this.handler = this.endpointHandlerArr[1] || this.options.verb.toLowerCase() + this.fnname.charAt(0).toUpperCase() + this.fnname.slice(1)
