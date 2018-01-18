@@ -17,14 +17,14 @@ module.exports = class extends Generator {
     this.argument('endpoint', { type: String, required: true, desc: 'endpoint path' })
     this.option('version', { type: Number, required: false, default: 1, desc: 'api version (defaults to 1)' })
 
-    verb = this.options.verb.toUpperCase()
+    const verb = this.options.verb.toUpperCase()
 
-    endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
-    fnName = endpointCase.split('/')[0]
+    const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
+    const fnName = endpointCase.split('/')[0]
     this.namePlural = isPlural ? fnName : pluralize.plural(fnName)
-    handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
+    const handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
 
-    version = `v${this.options.version}`
+    const version = `v${this.options.version}`
 
     this.tasks = []
     if (verb === 'CRUD') {
