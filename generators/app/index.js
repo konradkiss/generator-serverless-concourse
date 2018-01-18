@@ -34,6 +34,8 @@ module.exports = class extends Generator {
     let hand = fnName
     if (['PUT', 'POST', 'DELETE'].indexOf(verb.toUpperCase()) > -1) {
       hand = this.nameSingular
+      this.isPlural = false
+      this.needsId = this.options.verb.toUpperCase() === 'POST' ? false : true
     }
     const handlerName = verb.toLowerCase() + hand.charAt(0).toUpperCase() + hand.slice(1)
     const version = `v${this.options.version}`
