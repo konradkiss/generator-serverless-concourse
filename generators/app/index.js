@@ -15,7 +15,7 @@ module.exports = class extends Generator {
     this.endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
     this.endpointHandlerArr = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
 
-    this.fnname = endpointCase.split('/')[0]
+    this.fnname = this.endpointCase.split('/')[0]
     this.verb = this.options.verb
     this.handler = endpointHandlerArr[1] || this.options.verb
   }
