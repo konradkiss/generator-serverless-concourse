@@ -2,6 +2,7 @@
 const Generator = require('yeoman-generator')
 const YamlEdit = require('yaml-edit')
 const fullname = require('fullname')
+var pluralize = require('pluralize')
 
 module.exports = class extends Generator {
 
@@ -20,6 +21,9 @@ module.exports = class extends Generator {
     this.endpointHandlerArr = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
 
     this.fnname = this.endpointCase.split('/')[0]
+    this.namePlural = pluralize.isPlural(this.fnname) ? this.fnname : pluralize.plural(this.fnname)
+    this.nameSingular = pluralize.isSingular(this.fnname) ? this.fnname : pluralize.singular(this.fnname)
+
     this.verb = this.options.verb.toUpperCase()
     this.handler = this.endpointHandlerArr[1] || this.options.verb.toLowerCase() + this.fnname.charAt(0).toUpperCase() + this.fnname.slice(1)
   }
