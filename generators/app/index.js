@@ -1,6 +1,6 @@
 
-import * as Generator from 'yeoman-generator'
-import * as YamlEdit from 'yaml-edit'
+const Generator = require('yeoman-generator')
+const YamlEdit = require('yaml-edit')
 
 module.exports = class extends Generator {
 
