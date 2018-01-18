@@ -30,7 +30,11 @@ module.exports = class extends Generator {
     const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
     const fnName = endpointCase.split('/')[0]
     const handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
-    const handlerName = verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
+    let hand = fnName
+    if (['PUT', 'POST', 'DELETE'].indexOf(verb.toUpperCase()) > -1) {
+      hand = nameSingular
+    }
+    const handlerName = verb.toLowerCase() + hand.charAt(0).toUpperCase() + hand.slice(1)
     const version = `v${this.options.version}`
 
     this.defaultPath = this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (this.needsId ? '/{id}' : '')
