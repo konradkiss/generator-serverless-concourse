@@ -8,7 +8,7 @@
 const mod = require('../../../functions/<%= version %>/<%= name %>/<%= handlerFile %>')
 
 const wrapper = require('lambda-wrapper')
-const reflector = require('../../../../utils/reflect')
+const reflector = require('../../../utils/reflect')
 const lambda = wrapper.wrap(reflector(mod, '<%= name %>'), { handler: '<%= handler %>' })
 
 describe('<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %>', () => {
