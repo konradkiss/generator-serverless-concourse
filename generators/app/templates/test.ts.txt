@@ -5,10 +5,11 @@
  * @author <%= username %>
  */
 
-import * as mod from '../functions/<%= version %>/<%= path %>/<%= handler %>'
-import * as w from 'lambda-wrapper'
+const mod = require('../../../../functions/<%= version %>/<%= name %>/<%= lverb %>')
 
-const lambda = w.wrap(mod, { handler: '<%= handler %>' })
+const wrapper = require('lambda-wrapper')
+const reflector = require('../../../../utils/reflect')
+const lambda = wrapper.wrap(reflector(mod, '<%= name %>'), { handler: '<%= handler %>' })
 
 describe('<%= name %>', () => {
 
@@ -17,7 +18,7 @@ describe('<%= name %>', () => {
     done()
   })
 
-  it ('implements test here', async () => {
+  it ('should implement a test here', async () => {
     const response = await lambda.run({})
     expect(response).toBeDefined()
   })
