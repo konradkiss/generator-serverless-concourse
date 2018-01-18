@@ -50,15 +50,15 @@ module.exports = class extends Generator {
     return this.prompt(prompts).then((answers) => {
 
       this.tasks = []
-      if (verb === 'CRUD') {
+      if (answers.verb.toUpperCase() === 'CRUD') {
         if (!answers.crud) {
           return
         }
         for (let v in this.supportedVerbs) {
           this.tasks.push(createTask(v, answers.name, answers.version))
         }
-      } else if (this.supportedVerbs.indexOf(task.verb) > -1) {
-        this.tasks.push(createTask(task.verb, answers.name, answers.version))
+      } else if (this.supportedVerbs.indexOf(answers.verb) > -1) {
+        this.tasks.push(createTask(answers.verb, answers.name, answers.version))
       }
 
       fullname().then(username => {
