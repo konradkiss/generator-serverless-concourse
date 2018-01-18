@@ -23,6 +23,8 @@ module.exports = class extends Generator {
     this.needsId = this.options.verb.toUpperCase() === 'POST' ? false : !this.isPlural
     this.namePlural = this.isPlural ? fnName : pluralize.plural(fnName)
     this.nameSingular = !this.isPlural ? fnName : pluralize.singular(fnName)
+
+    this.crud = this.options.verb.toUpperCase() === 'CRUD'
   }
 
   prompting() {
@@ -58,7 +60,7 @@ module.exports = class extends Generator {
     return this.prompt(prompts).then((answers) => {
 
       this.tasks = []
-      if (answers.verb.toUpperCase() === 'CRUD') {
+      if (this.crud) {
         if (!answers.crud) {
           return
         }
