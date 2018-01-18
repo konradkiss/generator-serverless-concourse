@@ -1,26 +1,27 @@
 /**
- * Tests for the <%= verb %> /<%= path %> endpoint.
+ * Local tests for the <%= verb %> /<%= path %> endpoint.
  *
  * Generated on <%= day %> by yo generator-serverless-concourse.
  * @author <%= username %>
  */
 
 const mod = require('../../../functions/<%= version %>/<%= name %>/<%= handlerFile %>')
+const lambda = require('lambda-wrapper').wrap(mod, { handler: '<%= handler %>' })
+let response
 
-const wrapper = require('lambda-wrapper')
-const reflector = require('../../../utils/reflect')
-const lambda = wrapper.wrap(reflector(mod, '<%= name %>'), { handler: '<%= handler %>' })
+describe('/<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %>'', () => {
 
-describe('<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %>', () => {
-
-  beforeAll(done => {
-    //
+  beforeAll( async (done) => {
+    response = await lambda.run({test: 'cbsuccess'})
     done()
   })
 
-  it ('should implement a test here', async () => {
-    const response = await lambda.run({})
-    expect(response).toBeDefined()
+  it('should return 200', () => {
+    expect(response.statusCode).toEqual(200)
+  })
+
+  it('should return sent input', () => {
+    expect(JSON.parse(response.body).input.test).toEqual('cbsuccess')
   })
 
 })

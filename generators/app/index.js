@@ -45,7 +45,7 @@ module.exports = class extends Generator {
         const today = new Date();
         const day = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
-        this.handlerFile = answers.handler.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
+        this.handlerFile = answers.handler //.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
 
         this.fs.copyTpl(
           this.templatePath('function.ts.txt'),
