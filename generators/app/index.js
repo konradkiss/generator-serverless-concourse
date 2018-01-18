@@ -30,6 +30,7 @@ module.exports = class extends Generator {
     const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('.')[0] || ''
     const fnName = endpointCase.split('/')[0]
     const handler = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
+    const handlerName = handler || verb.toLowerCase() + fnName.charAt(0).toUpperCase() + fnName.slice(1)
     const version = `v${this.options.version}`
 
     this.defaultPath = this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (this.needsId ? '/{id}' : '')
@@ -43,7 +44,7 @@ module.exports = class extends Generator {
     } else {
       prompts.push({ message: 'HTTP verb', name: 'verb', type: 'input', default: verb })
       prompts.push({ message: 'HTTP path', name: 'path', type: 'input', default: this.defaultPath })
-      prompts.push({ message: 'Handler name', name: 'handler', type: 'input', default: handler })
+      prompts.push({ message: 'Handler name', name: 'handler', type: 'input', default: handlerName })
       prompts.push({ message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false })
     }
 
