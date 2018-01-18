@@ -5,12 +5,12 @@
  * @author <%= username %>
  */
 
-export const <%= name %> = (event, context, callback) => {
+export const <%= handler %> = (event, context, callback) => {
 
   const response = {
     statusCode: 200,
     body: JSON.stringify({
-      message: 'Function <%= name %> executed successfully!',
+      message: '<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %> executed successfully!',
       input: event,
     }),
   }

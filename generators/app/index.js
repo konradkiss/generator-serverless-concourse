@@ -21,8 +21,9 @@ module.exports = class extends Generator {
     this.endpointHandlerArr = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('.') || ''
 
     this.fnname = this.endpointCase.split('/')[0]
-    this.namePlural = pluralize.isPlural(this.fnname) ? this.fnname : pluralize.plural(this.fnname)
-    this.nameSingular = pluralize.isSingular(this.fnname) ? this.fnname : pluralize.singular(this.fnname)
+    this.isPlural = pluralize.isPlural(this.fnname)
+    this.namePlural = isPlural ? this.fnname : pluralize.plural(this.fnname)
+    this.nameSingular = !isPlural ? this.fnname : pluralize.singular(this.fnname)
 
     this.verb = this.options.verb.toUpperCase()
     this.handler = this.endpointHandlerArr[1] || this.options.verb.toLowerCase() + this.fnname.charAt(0).toUpperCase() + this.fnname.slice(1)
@@ -31,12 +32,12 @@ module.exports = class extends Generator {
   prompting() {
 
     const prompts = [
-      { message: 'API version?',  name: 'version',  type: 'input',  default: this.version },
-      { message: 'Function name', name: 'name',     type: 'input',  default: this.namePlural },
-      { message: 'HTTP verb',     name: 'verb',     type: 'input',  default: this.verb },
-      { message: 'HTTP path',     name: 'path',     type: 'input',  default: this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() },
-      { message: 'Handler name',  name: 'handler',  type: 'input',  default: this.handler },
-      { message: 'Enable CORS?',  name: 'cors',   type: 'confirm',  default: false },
+      { message: 'API version?', name: 'version', type: 'input', default: this.version },
+      { message: 'Function name', name: 'name', type: 'input', default: this.namePlural },
+      { message: 'HTTP verb', name: 'verb', type: 'input', default: this.verb },
+      { message: 'HTTP path', name: 'path', type: 'input', default: this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (this.isPlural ? '' : '{id}') },
+      { message: 'Handler name', name: 'handler', type: 'input', default: this.handler },
+      { message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false },
     ]
 
     return this.prompt(prompts).then((answers) => {
@@ -49,23 +50,26 @@ module.exports = class extends Generator {
         this.fs.copyTpl(
           this.templatePath('function.ts.txt'),
           this.destinationPath(`functions/${answers.version}/${answers.name}/${this.handlerFile}.ts`),
-          { name: answers.name, verb: answers.verb, lverb: answers.verb.toLowerCase(), path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version: answers.version }
+          { name: answers.name, verb: answers.verb, lverb: answers.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: this.handlerFile, cors: answers.cors, username, day, version: answers.version }
         )
 
         this.fs.copyTpl(
           this.templatePath('test.ts.txt'),
           this.destinationPath(`__tests__/${answers.version}/${answers.name}/${this.handlerFile}.spec.ts`),
-          { name: answers.name, verb: answers.verb, lverb: answers.verb.toLowerCase(), path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version: answers.version }
+          { name: answers.name, verb: answers.verb, lverb: answers.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: this.handlerFile, cors: answers.cors, username, day, version: answers.version }
         )
 
         const routesText = this.fs.read('routes.yml')
         const yamlEdit = YamlEdit(routesText)
         const route = {}
         route[answers.name] = {
-          handler: `functions/${answers.version}/${answers.name}/${answers.verb.toLowerCase()}.${answers.handler}`,
+          handler: `functions/${answers.version}/${answers.name}/${this.handlerFile}.${answers.handler}`,
           events: [
             { http: { path: answers.path, method: answers.verb, cors: answers.cors } },
           ]
+        }
+        if (!this.isPlural) {
+          route[answers.name].events[0].http.request = { parameters: { paths: { id: true } } }
         }
         yamlEdit.insertChild(answers.version, route)
       })

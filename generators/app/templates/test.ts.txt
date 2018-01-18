@@ -11,7 +11,7 @@ const wrapper = require('lambda-wrapper')
 const reflector = require('../../../../utils/reflect')
 const lambda = wrapper.wrap(reflector(mod, '<%= name %>'), { handler: '<%= handler %>' })
 
-describe('<%= name %>', () => {
+describe('<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %>', () => {
 
   beforeAll(done => {
     //
