@@ -1,2 +1,2 @@
 # generator-serverless-concourse
-Yeoman generator for serverless-concourse functions and tests.
+Yeoman Generator for serverless-concourse that creates new endpoints with tests and route registration.

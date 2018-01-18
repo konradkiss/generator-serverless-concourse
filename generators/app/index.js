@@ -12,11 +12,12 @@ module.exports = class extends Generator {
     this.argument('verb', { type: String, required: true, desc: 'http verb' })
     this.argument('endpoint', { type: String, required: true, desc: 'endpoint path' })
 
-    const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('/')
-    const endpoint = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('/')
+    const endpointCase = this.options.endpoint.replace(/^\/|\/$/g, '').split('/') || ''
+    const endpoint = this.options.endpoint.toLowerCase().replace(/^\/|\/$/g, '').split('/') || ''
 
     this.fnname = endpointCase[0]
     this.handler = endpoint[1] || this.options.verb
+    this.endpointCase = endpointCase
   }
 
   prompting() {
@@ -34,7 +35,7 @@ module.exports = class extends Generator {
       message: 'HTTP path',
       name: 'path',
       type: 'input',
-      default: this.options.endpointCase.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
+      default: this.endpointCase.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
     }, {
       message: 'Handler name',
       name: 'handler',
