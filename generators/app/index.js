@@ -40,13 +40,13 @@ module.exports = class extends Generator {
 
         this.fs.copyTpl(
           this.templatePath('function.ts.txt'),
-          this.destinationPath(`functions/${version}/${answers.name}/${answers.verb}.ts`),
+          this.destinationPath(`functions/${this.version}/${answers.name}/${answers.verb}.ts`),
           { name: answers.name, verb: answers.verb, path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version }
         )
 
         this.fs.copyTpl(
           this.templatePath('test.ts.txt'),
-          this.destinationPath(`__tests__/functions/${version}/${answers.name}/${answers.verb}.spec.ts`),
+          this.destinationPath(`__tests__/functions/${this.version}/${answers.name}/${answers.verb}.spec.ts`),
           { name: answers.name, verb: answers.verb, path: answers.path, handler: answers.handler, cors: answers.cors, username, day, version }
         )
 
@@ -54,7 +54,7 @@ module.exports = class extends Generator {
         const yamlEdit = YamlEdit(routesText)
         const route = {}
         route[answers.name] = {
-          handler: `functions/${version}/${answers.name}/${answers.verb.toLowerCase()}.${answers.handler}`,
+          handler: `functions/${this.version}/${answers.name}/${answers.verb.toLowerCase()}.${answers.handler}`,
           events: [
             { http: { path: answers.path, method: answers.verb.toLowerCase(), cors: answers.cors } },
           ]
