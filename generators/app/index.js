@@ -35,7 +35,7 @@ module.exports = class extends Generator {
       { message: 'API version?', name: 'version', type: 'input', default: this.version },
       { message: 'Function name', name: 'name', type: 'input', default: this.namePlural },
       { message: 'HTTP verb', name: 'verb', type: 'input', default: this.verb },
-      { message: 'HTTP path', name: 'path', type: 'input', default: this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (this.isPlural ? '' : '{id}') },
+      { message: 'HTTP path', name: 'path', type: 'input', default: this.namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (this.isPlural ? '' : '/{id}') },
       { message: 'Handler name', name: 'handler', type: 'input', default: this.handler },
       { message: 'Enable CORS?', name: 'cors', type: 'confirm', default: false },
     ]
