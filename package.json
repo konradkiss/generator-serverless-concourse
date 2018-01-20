@@ -20,6 +20,7 @@
   "dependencies": {
     "fullname": "^3.3.0",
     "pluralize": "^7.0.0",
+    "yamljs": "^0.3.0",
     "yeoman-generator": "^1.0.0"
   }
 }

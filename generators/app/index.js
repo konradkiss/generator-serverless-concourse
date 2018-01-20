@@ -1,8 +1,9 @@
 
 const Generator = require('yeoman-generator')
-const YamlEdit = require('yaml-edit')
+const YAML = require('yamljs')
+const fs = require('fs')
 const fullname = require('fullname')
-var pluralize = require('pluralize')
+const pluralize = require('pluralize')
 
 module.exports = class extends Generator {
 
@@ -60,15 +61,26 @@ module.exports = class extends Generator {
     return this.prompt(prompts).then((answers) => {
 
       this.tasks = []
+
       if (this.crud) {
+
         if (!answers.crud) {
           return
         }
-        for (let v in this.supportedVerbs) {
-          this.tasks.push(createTask(v, answers.name, answers.version))
-        }
+
+        const sName = pluralize.isPlural(answers.name) ? pluralize.singular(answers.name) : answers.name
+        const pName = pluralize.isPlural(answers.name) ? answers.name : pluralize.plural(answers.name)
+
+        this.tasks.push(createTask('GET', pName, answers.version))
+        this.tasks.push(createTask('GET', sName, answers.version))
+        this.tasks.push(createTask('POST', sName, answers.version))
+        this.tasks.push(createTask('PUT', sName, answers.version))
+        this.tasks.push(createTask('DELETE', sName, answers.version))
+
       } else if (this.supportedVerbs.indexOf(answers.verb) > -1) {
+
         this.tasks.push(createTask(answers.verb, answers.name, answers.version))
+
       }
 
       fullname().then(username => {
@@ -76,40 +88,48 @@ module.exports = class extends Generator {
         const today = new Date();
         const day = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
-        while (this.tasks.length) {
+        const routes = {}
+        routes[answers.version] = {}
 
-          const task = this.tasks.shift()
+        for (const task of this.tasks) {
 
           answers.path = answers.path || task.path
           answers.handler = answers.handler || task.verb.toLowerCase() + task.name.charAt(0).toUpperCase() + task.name.slice(1)
 
           this.fs.copyTpl(
             this.templatePath('function.ts.txt'),
-            this.destinationPath(`functions/${task.version}/${task.name}/${answers.handler}.ts`),
-            { name: task.name, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: answers.handler, cors: answers.cors, username, day, version: task.version }
+            this.destinationPath(`functions/${task.version}/${task.namePlural}/${answers.handler}.ts`),
+            { name: task.name, nameSingular: task.nameSingular, namePlural: task.namePlural, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: answers.handler, cors: answers.cors, username, day, version: task.version }
           )
 
           this.fs.copyTpl(
             this.templatePath('test.ts.txt'),
-            this.destinationPath(`__tests__/${task.version}/${task.name}/${answers.handler}.spec.ts`),
-            { name: task.name, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: answers.handler, cors: answers.cors, username, day, version: task.version }
+            this.destinationPath(`__tests__/${task.version}/${task.namePlural}/${answers.handler}.spec.ts`),
+            { name: task.name, nameSingular: task.nameSingular, namePlural: task.namePlural, verb: task.verb, lverb: task.verb.toLowerCase(), path: answers.path, handler: answers.handler, handlerFile: answers.handler, cors: answers.cors, username, day, version: task.version }
           )
 
-          const routesText = this.fs.read('routes.yml')
-          const yamlEdit = YamlEdit(routesText)
-          const route = {}
-          route[task.name] = {
+          const routeReference = `${task.namePlural}_${answers.handler}`
+          routes[answers.version][routeReference] = {
             handler: `functions/${task.version}/${task.name}/${answers.handler}.${answers.handler}`,
             events: [
-              { http: { path: answers.path, method: task.verb, cors: answers.cors } },
+              { http: { method: task.verb, path: answers.path } },
             ]
           }
-          if (this.needsId) {
-            route[task.name].events[0].http.request = { parameters: { paths: { id: true } } }
+          if (answers.cors) {
+            routes[answers.version][routeReference].events[0].http.cors = true
           }
-          yamlEdit.insertChild(task.version, route)
+          if (task.needsId) {
+            routes[answers.version][routeReference].events[0].http.request = { parameters: { paths: { id: true } } }
+          }
 
+          answers.path = null
+          answers.handler = null
         }
+
+        YAML.load('routes.yml', (obj) => {
+          const newRoutes = Object.assign({}, obj, routes)
+          fs.writeFile('routes.yml', YAML.stringify(newRoutes, 3))
+        })
       })
     })
   }
@@ -117,13 +137,15 @@ module.exports = class extends Generator {
 
 const createTask = (verb, fnName, version, handler) => {
 
-  const namePlural = this.isPlural ? fnName : pluralize.plural(fnName)
-  const nameSingular = !this.isPlural ? fnName : pluralize.singular(fnName)
-  const needsId = verb === 'POST' ? false : !this.isPlural
+  let isPlural = pluralize.isPlural(fnName)
+  const namePlural = isPlural ? fnName : pluralize.plural(fnName)
+  const nameSingular = !isPlural ? fnName : pluralize.singular(fnName)
   let hand = fnName
   if (['PUT', 'POST', 'DELETE'].indexOf(verb.toUpperCase()) > -1) {
     hand = nameSingular
+    isPlural = false
   }
+  const needsId = verb.toUpperCase() === 'POST' ? false : !isPlural
   const handlerName = verb.toLowerCase() + hand.charAt(0).toUpperCase() + hand.slice(1)
   const endpointPath = namePlural.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase() + (needsId ? '/{id}' : '')
 
@@ -134,6 +156,7 @@ const createTask = (verb, fnName, version, handler) => {
     lverb: verb.toLowerCase(),
     namePlural,
     nameSingular,
+    isPlural,
     needsId,
     handler: handlerName,
     path: endpointPath
