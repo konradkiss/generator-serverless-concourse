@@ -5,9 +5,9 @@
  * @author <%= username %>
  */
 
-describe('/<%= version %>/<%= filePrefix %><%= handlerFile %>.<%= handler %>', () => {
+describe('/<%= version %>/<%= filePrefix %><%= namePlural %>/<%= handlerFile %>.<%= handler %>', () => {
 
-  const mod = require('../../../<%= depthPrefix %>functions/<%= version %>/<%= filePrefix %><%= handlerFile %>')
+  const mod = require('../../../<%= depthPrefix %>functions/<%= version %>/<%= filePrefix %><%= namePlural %>/<%= handlerFile %>')
   const lambda = require('lambda-wrapper').wrap(mod, { handler: '<%= handler %>' })
   let response
 

@@ -107,7 +107,7 @@ module.exports = class extends Generator {
           this.tasks[t].path = answers.path
           this.tasks[t].handler = answers.handler
 
-          const depthPrefix = '../'.repeat(Math.max(0, (this.filePrefix.match(new RegExp("/", "g")) || []).length - 1))
+          const depthPrefix = '../'.repeat(Math.max(0, (this.filePrefix.match(new RegExp("/", "g")) || []).length))
 
           this.fs.copyTpl(
             this.templatePath('function.ts.txt'),
