@@ -1,5 +1,5 @@
 /**
- * Handler for the <%= verb %> /<%= version %>/<%= path %> endpoint.
+ * Handler for the <%= verb %> /<%= version %>/<%= pathPrefix %><%= path %> endpoint.
  *
  * Generated on <%= day %> by yo generator-serverless-concourse.
  * @author <%= username %>
@@ -10,7 +10,7 @@ export const <%= handler %> = (event, context, callback) => {
   const response = {
     statusCode: 200,
     body: JSON.stringify({
-      message: '<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %> executed successfully!',
+      message: '<%= version %>/<%= filePrefix %><%= handlerFile %>.<%= handler %> executed successfully!',
       input: event,
     }),
   }

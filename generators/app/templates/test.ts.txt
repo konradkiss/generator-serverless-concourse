@@ -1,13 +1,13 @@
 /**
- * Local tests for the <%= verb %> /<%= path %> endpoint.
+ * Local tests for the <%= verb %> /<%= version %>/<%= pathPrefix %><%= path %> endpoint.
  *
  * Generated on <%= day %> by yo generator-serverless-concourse.
  * @author <%= username %>
  */
 
-describe('/<%= version %>/<%= name %>/<%= handlerFile %>.<%= handler %>', () => {
+describe('/<%= version %>/<%= filePrefix %><%= handlerFile %>.<%= handler %>', () => {
 
-  const mod = require('../../../functions/<%= version %>/<%= namePlural %>/<%= handlerFile %>')
+  const mod = require('../../../<%= depthPrefix %>functions/<%= version %>/<%= filePrefix %><%= handlerFile %>')
   const lambda = require('lambda-wrapper').wrap(mod, { handler: '<%= handler %>' })
   let response
 
