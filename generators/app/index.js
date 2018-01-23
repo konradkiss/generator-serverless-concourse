@@ -149,7 +149,9 @@ module.exports = class extends Generator {
 
         YAML.load('routes.yml', (obj) => {
           for (const task of this.tasks) {
-            delete obj[task.version][`${task.namePlural}_${task.handler}`]
+            if (obj !== null && obj[task.version] && obj[task.version][`${task.namePlural}_${task.handler}`]) {
+              delete obj[task.version][`${task.namePlural}_${task.handler}`]
+            }
           }
           fs.writeFile('routes.yml', YAML.stringify(deepmerge(obj, routes), 3))
         })
