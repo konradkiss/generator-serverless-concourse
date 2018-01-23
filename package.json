@@ -1,6 +1,6 @@
 {
   "name": "generator-serverless-concourse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Yeoman Generator for serverless-concourse that creates new endpoints with tests and route registration.",
   "files": [
     "generators"
