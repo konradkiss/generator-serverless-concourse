@@ -37,15 +37,15 @@ Let's see some specific examples of commands and their generated code:
 ### Plural endpoint
 
 ```bash
-$ yo serverless-concourse get users
+$ yo serverless-concourse get addresses
 ? API version? v1
-? Function name users
+? Function name addresses
 ? HTTP verb GET
-? HTTP path users
-? Handler name getUsers
+? HTTP path addresses
+? Handler name getAddresses
 ? Enable CORS? No
-   create functions/v1/users/getUsers.ts
-   create __tests__/v1/users/getUsers.spec.ts
+   create functions/v1/addresses/getAddresses.ts
+   create __tests__/v1/addresses/getAddresses.spec.ts
 ```
 
 YAML generated:
