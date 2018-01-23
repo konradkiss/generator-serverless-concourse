@@ -71,8 +71,6 @@ module.exports = class extends Generator {
       this.filePrefix = this.makeFilePath(this.endpointCaseArr.slice(0, -1)).replace(/\/\/+/g, '/')
       this.pathPrefix = this.makeUrlPath(this.endpointCaseArr.slice(0, -1)).replace(/\/\/+/g, '/')
 
-      console.log(`filePrefix: ${this.filePrefix}`, `pathPrefix: ${this.pathPrefix}`)
-
       if (this.crud) {
         if (!answers.crud) {
           return
@@ -133,7 +131,7 @@ module.exports = class extends Generator {
           }
 
           const pathParams = this.prefixParams.slice()
-          console.log('verb', task.verb, 'isPlural', task.isPlural, 'needsId', task.needsId)
+
           if (task.needsId) {
             pathParams.push(`${task.nameSingular}Id`)
           }
@@ -200,7 +198,6 @@ module.exports = class extends Generator {
   }
 
   makeUrlPath(arr) {
-    console.log('makeUrlPath input: ', arr)
     let res = ''
     for (let segment of arr) {
       res += (pluralize.isPlural(segment) ? `${segment}` : (pluralize.plural(segment) + `/{${segment}Id}`)) + '/'
