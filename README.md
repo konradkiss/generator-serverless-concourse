@@ -166,7 +166,7 @@ YAML generated:
         events: [{http: {method: DELETE, path: 'messages/{messageId}', request: {parameters: {paths: {messageId: true}}}}}]
 ```
 
-### Deeper level endpoints
+Nested endpoints
 
 In this case let's assume we want to manage attachments to a specific message (hence the singular reference in the command to `message`).
 
