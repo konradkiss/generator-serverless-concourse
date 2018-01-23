@@ -14,11 +14,16 @@ The command takes a _verb_ and an _endpoint name_ as parameters. Ie.: `yo server
 
 Accepted verbs are the following:
 
-- `GET` with a *plural* endpoint name: a searchable and paginated list of items
-- `GET` with a *singular* endpoint name: retrieves a single item identified by an Id parameter
-- `POST` will always assume plural (no Id): creates a new item
-- `PUT` will always assume singular (with Id): modifies an existing item
-- `DELETE` will always assume singular (with Id): removes an existing item
+- *GET* with a *plural* endpoint name: a searchable and paginated list of items
+    - `GET /items/`
+- *GET* with a *singular* endpoint name: retrieves a single item identified by an Id parameter
+    - `GET /items/:itemId`
+- *POST* will always assume plural (no Id): creates a new item
+    - `POST /items/`
+- *PUT* will always assume singular (with Id): modifies an existing item
+    - `PUT /items/:itemId`
+- *DELETE* will always assume singular (with Id): removes an existing item
+    - `DELETE /items/:itemId`
 
 ### Endpoints
 
