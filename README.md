@@ -47,7 +47,7 @@ $ yo serverless-concourse get addresses
 ? Handler name getAddresses
 ? Enable CORS? No
    create functions/v1/addresses/getAddresses.ts
-   create __tests__/v1/addresses/getAddresses.spec.ts
+   create __tests__/v1/addresses/getAddresses.ts
 ```
 
 YAML generated:
@@ -69,7 +69,7 @@ $ yo serverless-concourse get address
 ? Handler name getAddress
 ? Enable CORS? No
    create functions/v1/addresses/getAddress.ts
-   create __tests__/v1/addresses/getAddress.spec.ts
+   create __tests__/v1/addresses/getAddress.ts
 ```
 
 YAML generated:
@@ -93,7 +93,7 @@ $ yo serverless-concourse post address
 ? Handler name postAddress
 ? Enable CORS? No
    create functions/v1/addresses/postAddress.ts
-   create __tests__/v1/addresses/postAddress.spec.ts
+   create __tests__/v1/addresses/postAddress.ts
 $ yo serverless-concourse put address
 ? API version? v1
 ? Function name addresses
@@ -102,7 +102,7 @@ $ yo serverless-concourse put address
 ? Handler name putAddress
 ? Enable CORS? No
    create functions/v1/addresses/putAddress.ts
-   create __tests__/v1/addresses/putAddress.spec.ts
+   create __tests__/v1/addresses/putAddress.ts
 $ yo serverless-concourse delete address
 ? API version? v1
 ? Function name addresses
@@ -111,7 +111,7 @@ $ yo serverless-concourse delete address
 ? Handler name deleteAddress
 ? Enable CORS? No
    create functions/v1/addresses/deleteAddress.ts
-   create __tests__/v1/addresses/deleteAddress.spec.ts
+   create __tests__/v1/addresses/deleteAddress.ts
 ```
 
 YAML generated:
@@ -137,15 +137,15 @@ $ yo serverless-concourse crud messages
 ? Enable CORS? No
 ? Generate CRUD? Yes
    create functions/v1/messages/getMessages.ts
-   create __tests__/v1/messages/getMessages.spec.ts
+   create __tests__/v1/messages/getMessages.ts
    create functions/v1/messages/getMessage.ts
-   create __tests__/v1/messages/getMessage.spec.ts
+   create __tests__/v1/messages/getMessage.ts
    create functions/v1/messages/postMessage.ts
-   create __tests__/v1/messages/postMessage.spec.ts
+   create __tests__/v1/messages/postMessage.ts
    create functions/v1/messages/putMessage.ts
-   create __tests__/v1/messages/putMessage.spec.ts
+   create __tests__/v1/messages/putMessage.ts
    create functions/v1/messages/deleteMessage.ts
-   create __tests__/v1/messages/deleteMessage.spec.ts
+   create __tests__/v1/messages/deleteMessage.ts
 ```
 
 YAML generated:
@@ -179,15 +179,15 @@ $ yo serverless-concourse crud message/attachments
 ? Enable CORS? No
 ? Generate CRUD? Yes
    create functions/v1/messages/attachments/getAttachments.ts
-   create __tests__/v1/messages/attachments/getAttachments.spec.ts
+   create __tests__/v1/messages/attachments/getAttachments.ts
    create functions/v1/messages/attachments/getAttachment.ts
-   create __tests__/v1/messages/attachments/getAttachment.spec.ts
+   create __tests__/v1/messages/attachments/getAttachment.ts
    create functions/v1/messages/attachments/postAttachment.ts
-   create __tests__/v1/messages/attachments/postAttachment.spec.ts
+   create __tests__/v1/messages/attachments/postAttachment.ts
    create functions/v1/messages/attachments/putAttachment.ts
-   create __tests__/v1/messages/attachments/putAttachment.spec.ts
+   create __tests__/v1/messages/attachments/putAttachment.ts
    create functions/v1/messages/attachments/deleteAttachment.ts
-   create __tests__/v1/messages/attachments/deleteAttachment.spec.ts
+   create __tests__/v1/messages/attachments/deleteAttachment.ts
 ```
 
 YAML generated:
