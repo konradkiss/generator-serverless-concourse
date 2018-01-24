@@ -5,10 +5,12 @@
  * @author <%= username %>
  */
 
+import * as mod from '../../../<%= depthPrefix %>functions/<%= version %>/<%= filePrefix %><%= namePlural %>/<%= handlerFile %>'
+import * as Wrapper from 'lambda-wrapper'
+const lambda = Wrapper.wrap(mod, { handler: '<%= handler %>' })
+
 describe('/<%= version %>/<%= filePrefix %><%= namePlural %>/<%= handlerFile %>.<%= handler %>', () => {
 
-  const mod = require('../../../<%= depthPrefix %>functions/<%= version %>/<%= filePrefix %><%= namePlural %>/<%= handlerFile %>')
-  const lambda = require('lambda-wrapper').wrap(mod, { handler: '<%= handler %>' })
   let response
 
   beforeAll(async (done) => {

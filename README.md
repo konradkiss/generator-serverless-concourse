@@ -2,6 +2,8 @@
 
 Yeoman Generator for serverless-concourse that creates new endpoints with tests and route registration.
 
+This generator is a work in progress and should not be used in either production or development.
+
 ## Usage
 
 ```bash
@@ -51,9 +53,9 @@ $ yo serverless-concourse get addresses
 YAML generated:
 
 ```yaml
-    addresses_getAddresses:
-        handler: functions/v1/users/getAddresses.getAddresses
-        events: [{http: {method: GET, path: 'users/{userId}/users/{userId}/addresses', request: {parameters: {paths: {userId: true}}}}}]
+v1_addresses_getAddresses:
+    handler: functions/v1/addresses/getAddresses.getAddresses
+    events: [{http: {method: GET, path: 'users/{userId}/users/{userId}/addresses', request: {parameters: {paths: {userId: true}}}}}]
 ```
 
 ### Singular endpoint with id
@@ -73,9 +75,9 @@ $ yo serverless-concourse get address
 YAML generated:
 
 ```yaml
-    addresses_getAddress:
-        handler: functions/v1/getAddress.getAddress
-        events: [{http: {method: GET, path: 'addresses/{addressId}', request: {parameters: {paths: {addressId: true}}}}}]
+v1_addresses_getAddress:
+    handler: functions/v1/addresses/getAddress.getAddress
+    events: [{http: {method: GET, path: 'addresses/{addressId}', request: {parameters: {paths: {addressId: true}}}}}]
 ```
 
 ### Endpoints with predefined plurality
@@ -115,15 +117,15 @@ $ yo serverless-concourse delete address
 YAML generated:
 
 ```yaml
-    addresses_postAddress:
-        handler: functions/v1/postAddress.postAddress
-        events: [{http: {method: POST, path: addresses}}]
-    addresses_putAddress:
-        handler: functions/v1/putAddress.putAddress
-        events: [{http: {method: PUT, path: 'addresses/{addressId}', request: {parameters: {paths: {addressId: true}}}}}]
-    addresses_deleteAddress:
-        handler: functions/v1/deleteAddress.deleteAddress
-        events: [{http: {method: DELETE, path: 'addresses/{addressId}', request: {parameters: {paths: {addressId: true}}}}}]
+v1_addresses_postAddress:
+    handler: functions/v1/addresses/postAddress.postAddress
+    events: [{http: {method: POST, path: addresses}}]
+v1_addresses_putAddress:
+    handler: functions/v1/addresses/putAddress.putAddress
+    events: [{http: {method: PUT, path: 'addresses/{addressId}', request: {parameters: {paths: {addressId: true}}}}}]
+v1_addresses_deleteAddress:
+    handler: functions/v1/addresses/deleteAddress.deleteAddress
+    events: [{http: {method: DELETE, path: 'addresses/{addressId}', request: {parameters: {paths: {addressId: true}}}}}]
 ```
 
 ### Generate CRUD endpoints
@@ -149,20 +151,20 @@ $ yo serverless-concourse crud messages
 YAML generated:
 
 ```yaml
-    messages_getMessages:
-        handler: functions/v1/getMessages.getMessages
+    v1_messages_getMessages:
+        handler: functions/v1/messages/getMessages.getMessages
         events: [{http: {method: GET, path: messages}}]
-    messages_getMessage:
-        handler: functions/v1/getMessage.getMessage
+    v1_messages_getMessage:
+        handler: functions/v1/messages/getMessage.getMessage
         events: [{http: {method: GET, path: 'messages/{messageId}', request: {parameters: {paths: {messageId: true}}}}}]
-    messages_postMessage:
-        handler: functions/v1/postMessage.postMessage
+    v1_messages_postMessage:
+        handler: functions/v1/messages/postMessage.postMessage
         events: [{http: {method: POST, path: messages}}]
-    messages_putMessage:
-        handler: functions/v1/putMessage.putMessage
+    v1_messages_putMessage:
+        handler: functions/v1/messages/putMessage.putMessage
         events: [{http: {method: PUT, path: 'messages/{messageId}', request: {parameters: {paths: {messageId: true}}}}}]
-    messages_deleteMessage:
-        handler: functions/v1/deleteMessage.deleteMessage
+    v1_messages_deleteMessage:
+        handler: functions/v1/messages/deleteMessage.deleteMessage
         events: [{http: {method: DELETE, path: 'messages/{messageId}', request: {parameters: {paths: {messageId: true}}}}}]
 ```
 
@@ -191,19 +193,19 @@ $ yo serverless-concourse crud message/attachments
 YAML generated:
 
 ```yaml
-    attachments_getAttachments:
-        handler: functions/v1/messages/getAttachments.getAttachments
-        events: [{http: {method: GET, path: 'messages/{messageId}/attachments', request: {parameters: {paths: {messageId: true}}}}}]
-    attachments_getAttachment:
-        handler: functions/v1/messages/getAttachment.getAttachment
-        events: [{http: {method: GET, path: 'messages/{messageId}/attachments/{attachmentId}', request: {parameters: {paths: {messageId: true, attachmentId: true}}}}}]
-    attachments_postAttachment:
-        handler: functions/v1/messages/postAttachment.postAttachment
-        events: [{http: {method: POST, path: 'messages/{messageId}/attachments', request: {parameters: {paths: {messageId: true}}}}}]
-    attachments_putAttachment:
-        handler: functions/v1/messages/putAttachment.putAttachment
-        events: [{http: {method: PUT, path: 'messages/{messageId}/attachments/{attachmentId}', request: {parameters: {paths: {messageId: true, attachmentId: true}}}}}]
-    attachments_deleteAttachment:
-        handler: functions/v1/messages/deleteAttachment.deleteAttachment
-        events: [{http: {method: DELETE, path: 'messages/{messageId}/attachments/{attachmentId}', request: {parameters: {paths: {messageId: true, attachmentId: true}}}}}]
+v1_attachments_getAttachments:
+    handler: functions/v1/messages/attachments/getAttachments.getAttachments
+    events: [{http: {method: GET, path: 'messages/{messageId}/attachments', request: {parameters: {paths: {messageId: true}}}}}]
+v1_attachments_getAttachment:
+    handler: functions/v1/messages/attachments/getAttachment.getAttachment
+    events: [{http: {method: GET, path: 'messages/{messageId}/attachments/{attachmentId}', request: {parameters: {paths: {messageId: true, attachmentId: true}}}}}]
+v1_attachments_postAttachment:
+    handler: functions/v1/messages/attachments/postAttachment.postAttachment
+    events: [{http: {method: POST, path: 'messages/{messageId}/attachments', request: {parameters: {paths: {messageId: true}}}}}]
+v1_attachments_putAttachment:
+    handler: functions/v1/messages/attachments/putAttachment.putAttachment
+    events: [{http: {method: PUT, path: 'messages/{messageId}/attachments/{attachmentId}', request: {parameters: {paths: {messageId: true, attachmentId: true}}}}}]
+v1_attachments_deleteAttachment:
+    handler: functions/v1/messages/attachments/deleteAttachment.deleteAttachment
+    events: [{http: {method: DELETE, path: 'messages/{messageId}/attachments/{attachmentId}', request: {parameters: {paths: {messageId: true, attachmentId: true}}}}}]
 ```

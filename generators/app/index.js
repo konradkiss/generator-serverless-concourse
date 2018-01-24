@@ -95,7 +95,6 @@ module.exports = class extends Generator {
         const day = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
         const routes = {}
-        routes[answers.version] = {}
 
         for (const t in this.tasks) {
           const task = this.tasks[t]
@@ -115,19 +114,19 @@ module.exports = class extends Generator {
 
           this.fs.copyTpl(
             this.templatePath('test.ts.txt'),
-            this.destinationPath(`__tests__/${task.version}/${this.filePrefix}${task.namePlural}/${answers.handler}.spec.ts`),
+            this.destinationPath(`__tests__/${task.version}/${this.filePrefix}${task.namePlural}/${answers.handler}.ts`),
             { name: task.name, nameSingular: task.nameSingular, namePlural: task.namePlural, verb: task.verb, lverb: task.verb.toLowerCase(), depthPrefix: depthPrefix, filePrefix: this.filePrefix, pathPrefix: this.pathPrefix, path: answers.path, handler: answers.handler, handlerFile: answers.handler, cors: answers.cors, username, day, version: task.version }
           )
 
-          const routeReference = `${task.namePlural}_${answers.handler}`
-          routes[answers.version][routeReference] = {
-            handler: `functions/${task.version}/${this.filePrefix}${answers.handler}.${answers.handler}`,
+          const routeReference = `${task.version}_${task.namePlural}_${answers.handler}`
+          routes[routeReference] = {
+            handler: `functions/${task.version}/${this.filePrefix}${task.namePlural}/${answers.handler}.${answers.handler}`,
             events: [
               { http: { method: task.verb, path: `${this.pathPrefix}${answers.path}` } },
             ]
           }
           if (answers.cors) {
-            routes[answers.version][routeReference].events[0].http.cors = true
+            routes[routeReference].events[0].http.cors = true
           }
 
           const pathParams = this.prefixParams.slice()
@@ -140,7 +139,7 @@ module.exports = class extends Generator {
             for (let p in pathParams) {
               pathParameters[pathParams[p]] = true
             }
-            routes[answers.version][routeReference].events[0].http.request = { parameters: { paths: pathParameters } }
+            routes[routeReference].events[0].http.request = { parameters: { paths: pathParameters } }
           }
 
           answers.path = null
@@ -149,11 +148,11 @@ module.exports = class extends Generator {
 
         YAML.load('routes.yml', (obj) => {
           for (const task of this.tasks) {
-            if (obj !== null && obj[task.version] && obj[task.version][`${task.namePlural}_${task.handler}`]) {
-              delete obj[task.version][`${task.namePlural}_${task.handler}`]
+            if (obj !== null && obj[`${task.version}_${task.namePlural}_${task.handler}`]) {
+              delete obj[`${task.version}_${task.namePlural}_${task.handler}`]
             }
           }
-          fs.writeFile('routes.yml', YAML.stringify(deepmerge(obj, routes), 3))
+          fs.writeFile('routes.yml', YAML.stringify(Object.assign({}, obj, routes), 2))
         })
       })
     })
