@@ -122,7 +122,7 @@ module.exports = class extends Generator {
           routes[routeReference] = {
             handler: `functions/${task.version}/${this.filePrefix}${task.namePlural}/${answers.handler}.${answers.handler}`,
             events: [
-              { http: { method: task.verb, path: `${this.pathPrefix}${answers.path}` } },
+              { http: { method: task.verb, path: `${task.version}/${this.pathPrefix}${answers.path}` } },
             ]
           }
           if (answers.cors) {

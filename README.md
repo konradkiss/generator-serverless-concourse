@@ -6,11 +6,13 @@ This generator is a work in progress and should not be used in either production
 
 ## Usage
 
+Make sure you're in your project root that is based on serverless-concourse. To create your first endpoints, use the following command:
+
 ```bash
 yo serverless-concourse [verb] [endpoint]
 ```
 
-The command takes a _verb_ and an _endpoint name_ as parameters. Ie.: `yo serverless-concourse get users`. The plural form of users tells the generator that we are looking for a list of users as opposed to a specific user which we would refer to with `yo serverless-concourse get user`.
+The command takes a _verb_ and an _endpoint name_ as parameters. Ie.: `yo serverless-concourse get users`. The plural form of users tells the generator that we are looking for a list of users as opposed to a specific user which would be referred to as `yo serverless-concourse get user`.
 
 ### Verbs
 
@@ -29,8 +31,7 @@ Accepted verbs are the following:
 
 ### Endpoints
 
-It is possible to create nested endpoints by making the endpoint name a path. Here, plurality will matter for each name in the path, ie: `yo serverless-concourse get user/addresses`. Here, each generated address endpoint will be effective under a specific user - a one to many relation. If we just wanted to nest endpoints we could
-use plural forms in the path, ie: `yo serverless-concourse get users/vips`.
+It is possible to create nested endpoints by making the endpoint name a path. Here, plurality will matter for each name in the path, ie: `yo serverless-concourse get user/addresses` will refer to getting a list of addresses for a specific user as opposed to the list being nested under the users endpoint. In other words, each generated address endpoint will be effective under a specific user - a one to many relation. If we just wanted to nest endpoints we could use plural forms in the path, ie: `yo serverless-concourse get users/vips`.
 
 ## Examples
 
